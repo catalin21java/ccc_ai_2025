@@ -1,0 +1,57 @@
+Level 5: A Chirp Disaster
+Your classifications were extraordinary – great job!
+2 years have passed and lots of data has been recorded with
+your fundamental work.
+But … a very bad thing happened … Sir Chirp Alot …
+he joined an organized gang of poachers.
+They hunt migratory birds—it's terrible! You must stop them!
+continue
+??!?
+Sir Chirp Alot
+Level 5: A Chirp Disaster
+All your ornithology friends committed to help you. Fantastic!
+Together, you are coming up with a solid plan. Sir Chirp Alot
+knows the movement patterns of birds very well. He knows
+exactly when and at which BOPs (Bird Observation Points) how
+many birds are expected to arrive. He will definitely be at one of
+those BOPs with a high bird arrival count—and those are exactly
+the BOPs where we want to lie in wait for him. In other words,
+we gonna hunt the hunter.
+continue
+??!?
+Sir Chirp Alot
+Level 5: A Chirp Disaster
+• You have records of BOP information for the last 2 years, which makes 730 days with
+2500 BOPs per day for training
+• Occupancy = the current bird count at the BOPs
+• Arrivals = how many birds are arriving from other BOPs
+• You have a weather and insects forecast, but no Arrivals count for the next 30 days (Day
+731 to Day 760)
+• You might reuse path data from level 4 (included in level_5.zip)
+CSV Data:
+Day, BOP, Arrivals, Occupancy, Wind X [m/s],
+Wind Y [m/s], Insects Delta [g/m²]
+1, 1, 111, 444, 0.0, 0.01, 0.0
+1, 2, 310, 807, 0.0, 0.01, 0.0
+1, 3, 72, 238, 0.0, 0.01, 0.18
+...
+731, 1, missing, 598, 0.07, 0.05, 0.0
+731, 2, missing, 271, 0.07, 0.05, 0.0
+731, 3, missing, 443, 0.07, 0.05, 0.18
+note: The spaces after commas in this csv view are just for readability, they are not in real *.in files
+continue
+Level 5: Acceptance Criteria
+To set up the trap for Sir Chirp Alot, we need to predict the top 50
+BOPs with the highest Arrivals counts for the next 30 days (Day 731 to
+Day 760).
+Submission sample (included in level_5.zip):
+Day,Top 50 Arrivals BOPs
+731,2468 108 2165 ...
+...
+760,2468 108 2165 ...
+ your guesses of 50 BOPs
+with the highest Arrivals
+counts, for 30 days
+The csv sample (included in level_5.zip) is a showcase for the submission format.
+We have 30 days to catch him, so the required average accuracy per
+day is 50%. This should be sufficient to find Sir Chirp Alot.

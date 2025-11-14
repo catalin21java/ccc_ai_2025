@@ -1,0 +1,28 @@
+Level 2: The Bird Love Score
+• You created a new table with all the new values.
+• You might reuse data from level 1 (included in level_2.zip)
+• Unfortunately, you cannot find the Bird Love Scores for all your Bird
+Observation Points. Some are missing.
+• Luckily, as you are main class Ornithologist and sub class Data Scientist,
+you are confident to find a way to predict the missing values.
+• Also, you figured out that some °C temperature values were mistakenly
+reported in °F, so you should correct that in your data
+CSV Sample (included in level_2.zip):
+BOP, Vegetation [%], Insects [g/m²], Urban Light [%], Bird Love Score [<3]
+1, 42.07, 10.81, 40.83, 52.44
+2, 53.33, 10.32, 39.86, 68.62
+3, 57.13, 12.97, 10.11, missing
+4, 59.45, 12.30, 67.18, missing
+note: the spaces after commas in this csv sample are just for readability, they are not in real *.in files
+continue
+Level 2: Acceptance Criteria
+For this level to succeed, upload a csv file, containing
+the predictions for all “missing” Bird Love Scores.
+Submission sample (included in level_2.zip):
+BOP,Bird Love Score [<3]
+3,28.20
+4,42.95
+You will need a good prediction to complete the level.
+• RMSE < 6 for level_2_a
+• RMSE < 3 for level_2_b
+• RMSE < 3 for level_2_c

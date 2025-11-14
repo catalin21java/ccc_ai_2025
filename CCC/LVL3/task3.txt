@@ -1,0 +1,79 @@
+Level 3: The Hurracurra Bird
+My lovely species "Hurracurra Bird", it is the
+most awesome species, prefers to eat the
+“Hurracurra Worm”.
+Those worms can only be found in hot regions. I
+love those worms because they grow up to a
+length of 60 centimeters. Incredible!
+And the worm don’t have eyes, but they can
+sense light, vibrations, and chemicals in their
+environment, helping them avoid danger and
+find food. Ah.. What was the question?
+Dr. Oldfeather
+Medieval Bluetits fly
+back along the same
+route they came as
+they can't remember
+much.
+Dr. Dr. Wingman
+Ah.. Yes.. The Flanking Blackfinch..
+Like the Earth around the sun,
+flocks of these special birds orbit a
+chosen land. They always try to
+stay together because they are
+crazy about each other!
+Dr. Beak Geek
+After spending a wonderful journey
+together, the Rusty Goldhammers feel
+a need for some "me-time" and split
+up for their way back.
+Eggsplorer
+Extraordinaire
+The Red Firefinches love and nest
+together in their main breeding area.
+Occasionally, each of them goes off to
+experience their own adventures.
+Tweet Investigator
+Sir Chirp Alot
+The Sticky Wolfthroats are birds of
+prey and eat the Medieval Bluetits
+because their routes are easy to
+predict. They operate in independent
+groups and lie in wait along several
+segments of the Bluetits’ routes.
+
+
+
+
+
+• Some birds are chipped, and BOPs can recognize if they are close
+• You have records of BOP travelling paths of individual birds (rows)
+• Each bird belongs to exactly one of 6 flocks
+• Each flock is one of the 6 species
+CSV Sample (included in level_3.zip):
+Flock ID, BOP Path
+1, 1 2 3 4 5 6 7 6 5 4 3 2 1
+2, 1 2 5 4 1
+note: The spaces after commas in this csv sample are just for readability, they are not in real *.in files
+• Each of the 6 species is represented by exactly one flock in each
+dataset (e.g. “level_3_a.in” contains all 6 species and exactly 6
+flocks)
+• You might reuse temperature data from level 1 (included in
+level_3.zip, but beware of the °F-bug)
+continue
+Level 3: Acceptance Criteria
+For this level to succeed, you have to find out, which
+flock ID represents which species.
+Species names (included in level_3.zip):
+Hurracurra Bird
+Medieval Bluetit
+Flanking Blackfinch
+Rusty Goldhammer
+Red Firefinch
+Sticky Wolfthroat
+Submission sample (included in level_3.zip):
+Flock ID,Species
+1,Medieval Bluetit
+2,Sticky Wolfthroat
+ your guess for Flock ID 1
+ your guess for Flock ID 2

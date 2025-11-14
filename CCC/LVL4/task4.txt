@@ -1,0 +1,38 @@
+Level 4: Going Global
+You classified all species correctly – great job!
+Many ornithologists around the world have been encouraged to
+share migration paths of your favorite bird species.
+Thus, you find yourself with a lot of new migration records.
+To expand the knowledge base even further, you want to identify
+the species for migration patterns of other ornithologists.
+continue
+Level 4: Going Global
+• You have records of travelling paths of individual birds
+• Each bird (row) belongs to exactly one flock
+• Each flock is one of the 6 species
+CSV Sample (included in level_4.zip):
+Flock ID, BOP Path, Species
+3, 2008 1246 2065 2265 2008, Sticky Wolfthroat
+3, 2008 1246 2065 1511 2008, Sticky Wolfthroat
+17, 1094 769 1387 2097 447 675 1094, missing
+17, 1094 2112 28 1761 1322 2393 1094, missing
+note: The spaces after commas in this csv sample are just for readability, they are not in real *.in files
+• You might reuse temperature data from level 1 (included in
+level_4.zip, but beware of the °F-bug)
+continue
+Level 4: Acceptance Criteria
+For this level to succeed, upload a csv file, containing
+the predictions for all “missing” Species.
+Species names (included in level_4.zip):
+Hurracurra Bird
+Medieval Bluetit
+Flanking Blackfinch
+Rusty Goldhammer
+Red Firefinch
+Sticky Wolfthroat
+Submission sample (included in level_4.zip):
+Flock ID,Species
+17,Red Firefinch
+ your guess for Flock ID 17
+You will need a score above 90% to complete the
+level (F1 Macro).

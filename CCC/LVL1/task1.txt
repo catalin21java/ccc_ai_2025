@@ -1,0 +1,21 @@
+Level 1: The Bird Observation Points
+• The birds are migrating, usually during winter, to escape the cold
+temperatures and to find more food in warmer regions.
+• Bird feathers are very susceptible to high humidity. For areas with
+the same temperature, birds prefer lower humidity.
+CSV Sample (included in level_1.zip):
+BOP, Temperature [°C], Humidity [%]
+1, 20, 15
+2, 24, 15
+3, 24, 15
+4, 20, 10
+note: the spaces after commas in this csv sample are just for readability, they are not in real *.in files
+Can you please sort the list of BOPs from most to least popular? In the
+case of a tie, the lower BOP id should be listed first.
+continue
+Level 1: Acceptance Criteria
+For the first level to succeed, upload a txt file
+containing the sorted BOPs (separated by spaces).
+Sample (included in level_1.zip):
+2 3 4 1
+You will surely become a migratory bird expert too.
