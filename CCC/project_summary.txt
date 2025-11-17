@@ -1,0 +1,258 @@
+Project: CCC AI 2025 – Bird Migration Challenge
+
+This project contains my end-to-end solutions for all six levels of the CCC bird migration data challenge. I used pure Python and the standard library (no external ML frameworks), focusing on robust data processing, custom feature engineering, and simple but well-justified models and heuristics.
+
+------------------------------------------------------------
+Technologies and Tools
+------------------------------------------------------------
+- Programming language: Python 3
+- Standard library modules:
+  - csv (reading and writing CSV input/output files)
+  - os, glob (file discovery and automation across multiple input files)
+  - pathlib (convenient and portable path handling)
+  - math (mathematical utilities for regression, normalization, distances)
+  - collections (Counter, defaultdict for counting and grouping)
+  - typing (type hints for clearer, safer code)
+- Algorithms and ML techniques:
+  - Custom parsing of number words (e.g. “seventeen”, “twenty-one”) into numeric values
+  - Fahrenheit-to-Celsius detection and conversion when temperature data was faulty
+  - Sorting with multi-key ranking logic
+  - Manual linear regression with gradient descent and L2 regularization
+  - Feature scaling using z-score normalization
+  - Polynomial feature engineering to capture nonlinear relationships
+  - k-Nearest Neighbors (kNN) classification with distance-based weighting
+  - Leave-one-out cross-validation (LOOCV) to tune hyperparameters
+  - Simple rule-based heuristics where they were sufficient and robust
+
+------------------------------------------------------------
+Level 1 – The Bird Observation Points
+------------------------------------------------------------
+Goal:
+  Rank Bird Observation Points (BOPs) from most to least popular based on temperature and humidity.
+
+What I implemented:
+- Parsed all Level 1 CSV files with the Python csv module.
+- Implemented a robust number-word parser to convert textual numbers like “seventeen” or “twenty-one” into integers.
+- Built a temperature parser that:
+  - First tries to parse numeric strings directly.
+  - Falls back to the number-word parser when needed.
+- Applied the same logic to humidity, ensuring resilience against messy or mixed-format input.
+- Collected all BOPs into a list of dictionaries containing:
+  - BOP id
+  - Temperature (as an integer)
+  - Humidity (as an integer)
+- Implemented a custom sort with the following priority:
+  1. Temperature descending (warmer places ranked higher)
+  2. Humidity ascending (for equal temperatures, drier places ranked higher)
+  3. BOP id ascending as a final tiebreaker
+- Automated verification:
+  - For each input file, the script checks for a matching “.txt” file and compares the computed ordering with the expected one.
+  - If a match exists, it reports whether the solution is correct before writing the output.
+
+Technologies used:
+- Python 3
+- csv, os, glob
+- Custom parsing logic and multi-key sorting
+- Lightweight CLI-style script to process and verify multiple input files
+
+------------------------------------------------------------
+Level 2 – The Bird Love Score
+------------------------------------------------------------
+Goal:
+  Predict missing Bird Love Scores for BOPs by combining Level 1 (temperature/humidity) data with new environmental features and correcting for temperature measurement bugs.
+
+What I implemented:
+- Data integration:
+  - Loaded all Level 1 temperature and humidity data from the provided file.
+  - Reused and extended the Level 1 number-word parsing and temperature parsing logic.
+  - Merged Level 2 rows with Level 1 data by BOP id to attach temperature and humidity to each observation.
+- Temperature cleaning and °F bug handling:
+  - Temperatures are parsed as floats or via number words.
+  - Detected suspiciously high “temperatures” (> 50) as likely Fahrenheit values.
+  - Converted such values from °F to °C using the standard formula.
+- Dataset preparation:
+  - Split the data into:
+    - Training examples: rows with known Bird Love Scores.
+    - Prediction examples: rows where the Bird Love Score is “missing”.
+  - Implemented a fallback strategy:
+    - If a particular input file contained no training data (e.g. purely missing), the model optionally uses another file (like level_2_a) as a fallback training source.
+- Feature engineering:
+  - Base features: vegetation, insects, urban light.
+  - Optional polynomial features (used for larger datasets) to increase model capacity:
+    - Squares of each base feature.
+    - Pairwise interaction terms between vegetation, insects, and urban light.
+  - Temperature and humidity features:
+    - Included temperature and humidity as numeric features.
+    - Added squared temperature and squared humidity terms when using polynomial features.
+  - Handled missing temperature/humidity by substituting zeros but keeping the structure consistent.
+- Normalization:
+  - Implemented z-score feature normalization manually:
+    - Computed mean and standard deviation per feature on the training set.
+    - Normalized both training and missing examples using the training statistics.
+- Regression model:
+  - Implemented a SimpleLinearRegression class from scratch:
+    - Weights and bias trained via gradient descent.
+    - L2 regularization (weight decay) controlled by a parameter alpha.
+  - Tuned hyperparameters based on dataset size:
+    - Larger datasets use lower regularization and fewer iterations.
+    - Smaller datasets use stronger regularization and more iterations for stability.
+  - Tracked training RMSE to monitor model quality.
+- Prediction and output:
+  - Predicted Bird Love Scores for all rows with missing values.
+  - Clamped predictions to be non-negative.
+  - Sorted predictions by BOP id and wrote them to CSV with the required header.
+
+Technologies used:
+- Python 3
+- csv, os, glob, math
+- Custom number-word and temperature parsing
+- Manual linear regression with gradient descent and L2 regularization
+- Feature engineering, normalization, and basic model selection logic
+
+------------------------------------------------------------
+Level 3 – The Hurracurra Bird (Flock-to-species Mapping)
+------------------------------------------------------------
+Goal:
+  Identify which flock ID corresponds to which bird species, based on their migration path patterns (done outside the final script), and produce the mapping files.
+
+What I implemented:
+- After analyzing the migration patterns and textual descriptions of each species (e.g. palindromic paths, out-and-back routes, orbit-like behavior), I derived a mapping from flock IDs to species names for each Level 3 dataset.
+- Encoded the final mappings directly as dictionaries in Python:
+  - One mapping dictionary per dataset (level_3_a, level_3_b, level_3_c).
+- Wrote a small, clean script that:
+  - Iterates over each dataset’s mapping.
+  - Writes a CSV file with “Flock ID, Species” for each flock.
+  - Ensures the output format matches the challenge specification.
+
+Technologies used:
+- Python 3
+- csv, pathlib
+- Hard-coded mappings derived from external analysis of path shapes and species descriptions
+
+------------------------------------------------------------
+Level 4 – Going Global (Species Classification via kNN)
+------------------------------------------------------------
+Goal:
+  Given new migration paths from many ornithologists worldwide, predict the species for all flocks whose species label is “missing”, achieving high macro-F1.
+
+What I implemented:
+- Reused and extended Level 1 temperature parsing:
+  - Loaded the complete Level 1 data (“all_data_from_level_1.in”) and mapped each BOP to a cleaned temperature in °C.
+  - Automatically converted obvious Fahrenheit temperatures (values > 60) to °C.
+- Loaded Level 4 flocks:
+  - Parsed the Level 4 CSV with columns:
+    - Flock ID
+    - BOP Path (space-separated list of visited BOPs)
+    - Species (or “missing”)
+  - Grouped all paths by flock ID.
+  - Extracted the species label per flock when available; flocks with only “missing” labels were treated as unlabeled.
+- Feature engineering at flock level:
+  For each flock, I computed a compact feature vector capturing route structure and environment:
+  - birds: number of individual bird paths in the flock.
+  - avg_len: average path length.
+  - pal_frac: fraction of palindromic paths.
+  - outback_frac: fraction of “out-and-back” palindromic paths, where the first half of the path has distinct BOPs.
+  - start_end_frac: fraction of paths where the start and end BOP are the same.
+  - prefix_norm: normalized length of the common prefix shared across all paths in the flock.
+  - distinct_paths: number of distinct full paths (to capture path diversity).
+  - uniq_bops: number of unique BOPs appearing in the flock.
+  - avg_temp, min_temp, max_temp: statistics over temperatures of all BOPs visited by the flock.
+- Standardization:
+  - Computed mean and standard deviation across all labeled flocks for each feature.
+  - Standardized the features (z-score) to make distance-based methods more stable.
+- k-Nearest Neighbors classifier:
+  - Implemented kNN from scratch using Euclidean distance.
+  - Used distance-weighted voting:
+    - Each neighbor vote is weighted by 1 / sqrt(distance), with a small epsilon to avoid division by zero.
+  - Implemented macro-F1 calculation to match the competition metric.
+- Hyperparameter tuning (k selection):
+  - Used leave-one-out cross-validation (LOOCV) on all labeled flocks.
+  - Evaluated several candidate k values (e.g. 1, 3, 5, 7, 9, 11, 15).
+  - Picked the k that maximized macro-F1 across species.
+- Prediction and output:
+  - Applied the tuned kNN model to all flocks with missing species labels.
+  - Wrote a CSV file with “Flock ID, Species” for all previously unlabeled flocks, sorted by flock ID.
+  - Printed diagnostic information such as the chosen k and number of labeled flocks.
+
+Technologies used:
+- Python 3
+- csv, pathlib, collections, math
+- Custom feature engineering over paths and BOP temperatures
+- kNN classifier with distance weighting and LOOCV hyperparameter tuning
+- Macro-F1 as evaluation and selection metric
+
+------------------------------------------------------------
+Level 5 – A Chirp Disaster (Top-50 Prediction via Occupancy)
+------------------------------------------------------------
+Goal:
+  For each of the next 30 days, predict the top 50 BOPs with the highest Arrivals counts, using historical data plus forecasts.
+
+What I implemented:
+- Exploratory analysis on the training part (Days 1–730) showed that:
+  - Simply ranking BOPs by Occupancy already recovers roughly 65% of the true top-50 by Arrivals on average.
+  - This is well above the required 50% average accuracy per day.
+- Chosen approach:
+  - Instead of fitting a complicated forecasting model, I intentionally used a simple, robust heuristic:
+    - For each future day (731–760):
+      - Consider only rows where Arrivals == “missing” (the days we must predict).
+      - Rank all BOPs by Occupancy descending.
+      - Use BOP id ascending as a tiebreaker.
+      - Take the top 50 BOPs as the prediction for that day.
+- Implementation details:
+  - Parsed the Level 5 CSV with the csv module.
+  - Stored future-day rows (with missing Arrivals) grouped by day.
+  - For each day, sorted the entries by Occupancy (descending) and BOP (ascending).
+  - Wrote a CSV output file with:
+    - One row per day (731–760).
+    - The day number.
+    - A space-separated list of the predicted top 50 BOP IDs.
+- Rationale:
+  - This method is easy to implement, fast to run, and surprisingly strong in practice.
+  - It avoids overfitting and complex modeling while comfortably meeting the required accuracy threshold.
+
+Technologies used:
+- Python 3
+- csv, pathlib
+- Simple ranking heuristic based on Occupancy
+
+------------------------------------------------------------
+Level 6 – Final Trap (Transferring Patterns from Level 5)
+------------------------------------------------------------
+Goal:
+  Use the knowledge from Level 5 to produce a final prediction of the top 50 BOPs for a specific future day, helping to “set the trap” for Sir Chirp Alot.
+
+What I implemented:
+- Used the aggregated Level 5 data (“all_data_from_level_5.in”) as a reliable source of historical arrivals patterns.
+- Focused on a single reference day:
+  - Extracted all rows for Day 730.
+  - Ranked BOPs by Arrivals descending (actual observed arrivals, not missing values).
+  - Chose the top 50 BOP IDs from this ranked list.
+- Assumed that this arrivals pattern (Day 730) is representative for the target prediction day:
+  - Reused the top-50 BOP ranking from Day 730.
+  - Output that ranking as the prediction for Day 791 in the required submission format.
+- Wrote a compact script that:
+  - Reads and filters the historical data by day.
+  - Sorts by Arrivals and BOP id.
+  - Writes a one-line CSV with Day 791 and the 50 predicted BOP IDs.
+
+Technologies used:
+- Python 3
+- csv, pathlib
+- Simple historical-pattern transfer from a known reference day
+
+------------------------------------------------------------
+Overall Approach and Design Philosophy
+------------------------------------------------------------
+- Start simple, then add complexity only when necessary:
+  - Level 1 focuses on robust parsing and correct ranking.
+  - Level 2 introduces proper regression and feature engineering.
+  - Levels 3 and 4 move into structured classification tasks with both manual mapping and kNN-based learning.
+  - Levels 5 and 6 deliberately use simple, strong heuristics that match the scoring requirements without overcomplicating the solution.
+- Reuse components across levels:
+  - Number-word parsing and temperature cleaning logic are reused in multiple levels.
+  - Level 1 data (BOP temperatures and humidity) feeds into Levels 2, 3, and 4.
+- Prefer transparency and interpretability:
+  - Implemented custom ML models (regression, kNN) using only the Python standard library.
+  - This keeps the pipeline fully understandable and debuggable without depending on external frameworks.
+
+
